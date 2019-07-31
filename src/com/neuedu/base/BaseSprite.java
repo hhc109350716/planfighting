@@ -1,5 +1,7 @@
 package com.neuedu.base;
 
+import java.awt.*;
+
 public abstract class BaseSprite {
     private int x;
     private int y;
@@ -26,5 +28,9 @@ public abstract class BaseSprite {
 
     public void setY(int y) {
         this.y = y;
+    }
+    //碰撞
+    public Rectangle getRectangle(){
+        return null;
     }
 }
