@@ -14,9 +14,13 @@ import java.awt.event.KeyEvent;
 public class MyPlane extends BaseSprite implements Moveable, Drawable {
 
     private Image image;
-    private int speed = FrameConstant.FRAME_SPEED * 4;
+    private int speed = FrameConstant.FRAME_SPEED * 5;
     private boolean up,right,down,left;
     private boolean fire;
+    private boolean bigfire;
+    public int bigbullet;
+    public int myHp;
+    public int type = 1;
 
     public MyPlane() {
         this((FrameConstant.FRAME_WIDTH - ImageMap.get("mp1").getWidth(null))/2,
@@ -27,14 +31,17 @@ public class MyPlane extends BaseSprite implements Moveable, Drawable {
     public MyPlane(int x, int y, Image image) {
         super(x, y);
         this.image = image;
+        myHp = 100;
+        bigbullet = 10;
     }
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(image,getX(),getY(),image.getWidth(null),image.getHeight(null),null);
         move();
 
         borderTesting();
+        g.drawImage(image,getX(),getY(),image.getWidth(null),image.getHeight(null),null);
+
     }
 
     /**
@@ -46,9 +53,14 @@ public class MyPlane extends BaseSprite implements Moveable, Drawable {
           GameFram gameFram = DateStore.get("gameFram");
           gameFram.getBulletList().add(new MyBullet(
                   getX() + (image.getWidth(null) / 2) - (ImageMap.get("mpb1").getWidth(null) / 2),
-                   getY() - ImageMap.get("mpb1").getWidth(null) - 30,
-                  ImageMap.get("mpb1")
-          ));
+                   getY() - ImageMap.get("mpb1").getWidth(null) - 30,type));
+
+        }
+        if (bigfire){
+            GameFram gameFram = DateStore.get("gameFram");
+            gameFram.getBigBulletList().add(new MyBigBullet(
+                    getX() + (image.getWidth(null) / 2) -  (ImageMap.get("bmpb5").getWidth(null) / 2 - 65),
+                    getY() - ImageMap.get("bmpb5").getWidth(null)));
         }
     }
     @Override
@@ -103,6 +115,17 @@ public class MyPlane extends BaseSprite implements Moveable, Drawable {
         if (e.getKeyCode() == KeyEvent.VK_J){
             fire = true;
         }
+        if (e.getKeyCode() == KeyEvent.VK_O){
+            if (bigbullet > 0){
+                bigfire = true;
+                bigbullet--;
+            }else{
+                bigfire = false;
+            }
+
+
+        }
+
     }
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_W){
@@ -120,6 +143,10 @@ public class MyPlane extends BaseSprite implements Moveable, Drawable {
         if (e.getKeyCode() == KeyEvent.VK_J){
             fire();
             fire = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_O){
+            fire();
+            bigfire = false;
         }
     }
 }

@@ -9,13 +9,13 @@ import com.neuedu.util.DateStore;
 import com.neuedu.util.ImageMap;
 
 import java.awt.*;
-import java.util.List;
 
 public class EnemyBullet extends BaseSprite implements Moveable, Drawable {
 
     private Image image;
 
     private int speed = FrameConstant.FRAME_SPEED * 5;
+
 
     public EnemyBullet() {
     }
@@ -27,9 +27,12 @@ public class EnemyBullet extends BaseSprite implements Moveable, Drawable {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(image,getX(),getY(),image.getWidth(null),image.getHeight(null),null);
         move();
         borderTesting();
+        g.drawImage(image,getX(),getY(),
+                image.getWidth(null),
+                image.getHeight(null),null);
+
     }
 
     @Override
@@ -45,8 +48,12 @@ public class EnemyBullet extends BaseSprite implements Moveable, Drawable {
     public void collisionTesting(MyPlane myPlane){
         if (myPlane.getRectangle().intersects(this.getRectangle())){
             GameFram gameFram  = DateStore.get("gameFram");
+            myPlane.myHp -=10;
+            if (myPlane.myHp <= 0){
+                gameFram.gameover = 2;
+            }
             gameFram.getEnemyBulletList().remove(this);
-            gameFram.gameover = true;
+
         }
 
 
